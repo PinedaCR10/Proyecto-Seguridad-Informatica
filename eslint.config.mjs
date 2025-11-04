@@ -5,6 +5,7 @@ import { defineConfig } from "eslint/config";
 export default defineConfig([
   {
     files: ["**/*.{js,mjs,cjs}"],
+    ignores: ["tests/**", "**/*.test.js", "**/*.spec.js"], // Ignorar archivos de test
     languageOptions: {
       globals: globals.node, // ✅ entorno Node.js
       ecmaVersion: "latest",

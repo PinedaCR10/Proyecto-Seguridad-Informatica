@@ -13,13 +13,18 @@
     "swig": "^1.4.2"
   },
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "test": "jest",
+    "test:coverage": "jest --coverage"
   },
   "author": "UNA",
   "license": "MIT",
   "devDependencies": {
     "@eslint/js": "^9.38.0",
     "eslint": "^9.38.0",
-    "globals": "^16.4.0"
+    "globals": "^16.4.0",
+    "jest": "^30.2.0"
   }
 }
