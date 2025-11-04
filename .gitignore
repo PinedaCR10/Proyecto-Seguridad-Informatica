@@ -1,0 +1,22 @@
+# Dependencias
+node_modules/
+
+# Logs
+*.log
+
+# Coverage
+coverage/
+
+# Environment
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+.DS_Store
+
+# Reports generados
+eslint-report.json
+semgrep-report.json
+snyk-report.json
