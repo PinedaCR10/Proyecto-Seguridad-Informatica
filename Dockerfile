@@ -1,0 +1,29 @@
+# Usar imagen base oficial de Node.js (version LTS)
+FROM node:18-alpine
+
+# Establecer directorio de trabajo
+WORKDIR /app
+
+# Copiar archivos de dependencias
+COPY package*.json ./
+
+# Instalar dependencias de produccion
+# Usamos npm install --production que es mas tolerante que npm ci
+RUN npm install --production --no-audit --no-fund && npm cache clean --force
+
+# Copiar el resto de los archivos de la aplicacion
+COPY . .
+
+# Crear usuario no-root y cambiar permisos
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S nodejs -u 1001 && \
+    chown -R nodejs:nodejs /app
+
+# Cambiar al usuario no-root
+USER nodejs
+
+# Exponer el puerto que usa la aplicacion
+EXPOSE 3000
+
+# Comando para iniciar la aplicacion
+CMD ["node", "server.js"]
