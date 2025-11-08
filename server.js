@@ -13,6 +13,19 @@ let app = express();
 // Variables de entorno
 const PORT = process.env.PORT || "3000";
 
+// Validar variables de entorno requeridas
+const requiredEnvVars = ['SECRET', 'BASE_URL', 'CLIENT_ID', 'ISSUER_BASE_URL'];
+const missingEnvVars = requiredEnvVars.filter(varName => !process.env[varName]);
+
+if (missingEnvVars.length > 0) {
+  console.error('❌ Error: Faltan las siguientes variables de entorno requeridas:');
+  missingEnvVars.forEach(varName => {
+    console.error(`   - ${varName}`);
+  });
+  console.error('\nPor favor, verifica que el archivo .env esté configurado correctamente.');
+  process.exit(1);
+}
+
 // Configuración de Auth0
 const config = {
   authRequired: false,
