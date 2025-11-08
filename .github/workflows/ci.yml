@@ -25,9 +25,6 @@ jobs:
           node-version: '18'
           cache: 'npm'
           
-      - name: Instalar dependencias
-        run: npm ci
-        
       - name: Verificar si script lint existe
         id: check-lint
         run: |
@@ -37,6 +34,10 @@ jobs:
             echo "exists=false" >> $GITHUB_OUTPUT
             echo "Script 'lint' no encontrado en package.json, saltando..."
           fi
+          
+      - name: Instalar dependencias
+        if: steps.check-lint.outputs.exists == 'true'
+        run: npm ci
         
       - name: Ejecutar ESLint
         if: steps.check-lint.outputs.exists == 'true'
@@ -101,9 +102,6 @@ jobs:
           node-version: '18'
           cache: 'npm'
           
-      - name: Instalar dependencias
-        run: npm ci
-        
       - name: Verificar si script test existe
         id: check-test
         run: |
@@ -113,6 +111,10 @@ jobs:
             echo "exists=false" >> $GITHUB_OUTPUT
             echo "Script 'test' no encontrado en package.json, saltando..."
           fi
+          
+      - name: Instalar dependencias
+        if: steps.check-test.outputs.exists == 'true'
+        run: npm ci
         
       - name: Ejecutar tests
         if: steps.check-test.outputs.exists == 'true'
