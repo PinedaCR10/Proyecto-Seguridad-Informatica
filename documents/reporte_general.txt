@@ -1,0 +1,109 @@
+REPORTE GENERAL – SEGURIDAD INFORMÁTICA (UNA Chat)
+
+Autor: Emmanuel Pineda Rodríguez
+Proyecto final: UNA Chat
+Curso: Seguridad Informática
+Universidad Nacional – Sede Chorotega
+
+------------------------------------------------------------
+1. PROPÓSITO
+El documento establece estándares de desarrollo, estilo y seguridad para el proyecto UNA Chat,
+garantizando un código seguro, coherente y mantenible. Aplica a todas las fases del ciclo de
+vida del software: planificación, codificación, pruebas y despliegue.
+
+------------------------------------------------------------
+2. ESTRUCTURA DEL PROYECTO
+Cada nuevo módulo debe seguir una estructura clara. El archivo .env no debe subirse al
+repositorio, ya que contiene credenciales privadas. Las vistas deben ir en /views y los
+recursos estáticos en /static.
+
+------------------------------------------------------------
+3. HERRAMIENTAS DE ASEGURAMIENTO DE CALIDAD
+
+Herramienta | Propósito | Frecuencia | Responsable
+------------------------------------------------------------
+ESLint  | Asegurar estilo y estructura del código | Cada commit | Todos los devs
+Snyk    | Escaneo de vulnerabilidades en dependencias | Semanal / antes de entregas | QA
+Semgrep | Análisis estático (OWASP Top 10) | Mensual / entregas finales | Seguridad
+Python + pip | Dependencia técnica para ejecutar Semgrep | Instalación única | Seguridad
+
+------------------------------------------------------------
+4. CONVENCIONES DE CÓDIGO
+
+4.1 Estilo general
+- Seguir las reglas definidas en ESLint.
+- Usar const y let (no se permite var).
+- Usar comillas dobles ("") para texto.
+- Terminar las líneas con punto y coma (;).
+- Evitar console.log() en producción.
+- No incluir credenciales o secretos en el código.
+
+4.2 Estructura de archivos
+- Cada módulo debe tener una sola responsabilidad.
+- Definir rutas en server.js o routers independientes.
+- Vistas en /views y recursos en /static.
+
+4.3 Nomenclatura
+- Variables y funciones: camelCase
+- Clases: PascalCase
+- Constantes globales: MAYÚSCULAS_CON_GUIONES
+- Archivos: minúsculas sin espacios (login.html, dashboard.js)
+
+------------------------------------------------------------
+5. BUENAS PRÁCTICAS DE DESARROLLO SEGURO
+Antes de subir cambios al repositorio:
+- Ejecutar ESLint para verificar errores de estilo.
+- Ejecutar Snyk para detectar vulnerabilidades.
+- Ejecutar Semgrep para revisar riesgos OWASP.
+
+------------------------------------------------------------
+6. REGLAS PARA EL USO DE IA
+- Revisar siempre el código generado por IA antes de usarlo.
+- Cumplir con el formato y estilo definidos en el proyecto.
+- Evitar instalar dependencias innecesarias o inseguras.
+- Documentar si la IA generó código crítico.
+- Nunca usar IA para crear o guardar claves, contraseñas o tokens.
+- Formular prompts técnicos y seguros.
+
+------------------------------------------------------------
+7. CONVENCIONES DEL EQUIPO
+
+Categoría | Regla | Ejemplo
+------------------------------------------------------------
+Variables | camelCase | const userToken = getSessionToken()
+Constantes globales | MAYÚSCULAS | const API_URL = "https://api.app.com";
+Comillas | Dobles | "use strict";
+Indentación | 2 espacios por nivel | —
+Comentarios | En español y descriptivos | // Valida credenciales del usuario
+Funciones | Verbos de acción | validateUser(), generateToken()
+Archivos | Minúsculas sin espacios | server.js, authController.js
+
+------------------------------------------------------------
+8. REVISIÓN Y ASEGURAMIENTO DE CALIDAD
+
+Validaciones automáticas:
+- Ejecutar ESLint → sin errores.
+- Ejecutar Snyk → sin vulnerabilidades críticas.
+- Revisar Semgrep → sin fallas OWASP.
+
+Validaciones manuales:
+- Probar endpoints principales.
+- Verificar vistas sin errores.
+- Revisar consola limpia (sin console.log()).
+
+------------------------------------------------------------
+9. ENTREGA Y CONTROL DE VERSIONES
+
+Tipo | Uso | Ejemplo
+------------------------------------------------------------
+feat | Nueva funcionalidad | feat: agregar autenticación con JWT
+fix | Corrección de error | fix: corregir error de ruta /login
+docs | Cambios en documentación | docs: actualizar README
+refactor | Mejora sin cambio funcional | refactor: simplificar middleware de sesiones
+
+------------------------------------------------------------
+10. CONCLUSIONES
+El uso de ESLint, Snyk y Semgrep fortalece la seguridad y calidad del código del
+proyecto UNA Chat, permitiendo detectar errores, mantener coherencia y prevenir
+vulnerabilidades antes del despliegue. Estas medidas consolidan un proceso de
+desarrollo maduro, seguro y confiable para todo el equipo.

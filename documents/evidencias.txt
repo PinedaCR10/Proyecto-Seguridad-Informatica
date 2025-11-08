@@ -1,0 +1,131 @@
+EVIDENCIAS (LINTING / SNYK / SEMGREP)
+
+1. ESCANEO CON SNYK
+------------------------------------------------------------
+El proceso comenzó con la instalación y configuración de la herramienta Snyk en el entorno local del proyecto UNA CHAT.
+Snyk se utiliza para identificar vulnerabilidades conocidas en las dependencias (tanto directas como indirectas) del proyecto.
+
+Comando ejecutado:
+    snyk test
+
+Resultados obtenidos:
+    • 234 dependencias detectadas → paquetes que usa el proyecto (directos e indirectos).
+    • 49 issues encontrados → vulnerabilidades conocidas detectadas.
+    • 96 rutas vulnerables → algunas vulnerabilidades se repiten en diferentes rutas de dependencia.
+
+A continuación, se generó el reporte en formato JSON:
+    snyk test --json > snyk-report.json
+
+Este archivo permite visualizar de forma estructurada las vulnerabilidades, su severidad (alta, media o baja), y las recomendaciones sugeridas por Snyk para cada una de ellas.
+
+Conclusión del escaneo con Snyk:
+    El análisis permitió detectar vulnerabilidades en dependencias desactualizadas, configuraciones inseguras y bibliotecas potencialmente comprometidas. 
+    Gracias al reporte generado, se pueden priorizar las actualizaciones y aplicar medidas correctivas, asegurando así un entorno más seguro para el proyecto UNA CHAT.
+
+
+2. ESCANEO CON SEMGREP (OWASP TOP 10)
+------------------------------------------------------------
+Después del análisis con Snyk, se implementó la herramienta Semgrep. Esta permite detectar malas prácticas o vulnerabilidades dentro del código fuente del proyecto mediante reglas estáticas basadas en OWASP Top 10.
+
+Instalación y ejecución del análisis:
+    python -m semgrep --config=p/owasp-top-ten .
+
+Resultados del escaneo:
+    • Proyecto: UNA CHAT
+    • Archivos escaneados: 8
+    • Reglas aplicadas: 74 (basadas en el OWASP Top 10)
+    • Resultados: 6 hallazgos críticos detectados principalmente en el archivo server.js
+
+Descripción detallada de los hallazgos críticos:
+------------------------------------------------------------
+1. Uso de variable SECRET fija en el código fuente.
+   - Descripción: Se encontró una variable de entorno sensible (SECRET) codificada directamente en el código fuente.
+   - Riesgo: Si el repositorio se comparte o se hace público, el secreto puede ser expuesto, comprometiendo la seguridad del sistema.
+   - Recomendación: Usar variables de entorno en lugar de valores fijos.
+
+2. Cookie sin configuración 'secure'.
+   - Regla: express-cookie-session-no-secure
+   - Tipo: Security Misconfiguration
+   - Descripción: La cookie de sesión no define el parámetro 'secure', lo que permite enviarla por HTTP.
+   - Recomendación: Habilitar 'secure: true' para que solo se envíe por HTTPS.
+
+3. Falta de expiración en la cookie (expires no definido).
+   - Regla: express-cookie-session-no-expires
+   - Tipo: Session Management Risk
+   - Descripción: La cookie de sesión no tiene un tiempo de expiración definido.
+   - Recomendación: Definir una expiración razonable para las cookies de sesión.
+
+4. Falta de dominio y path en cookie.
+   - Reglas: express-cookie-session-no-domain / express-cookie-session-no-path
+   - Tipo: Cookie Scope Misconfiguration
+   - Descripción: La cookie no especifica el dominio ni la ruta, ampliando innecesariamente su alcance.
+   - Recomendación: Restringir el alcance definiendo los valores de 'domain' y 'path'.
+
+5. Uso de nombre de cookie por defecto.
+   - Regla: express-cookie-session-default-name
+   - Tipo: Information Disclosure / Fingerprinting
+   - Descripción: Se usa el nombre de cookie por defecto ('connect.sid'), lo que facilita identificar que el backend usa Express.
+   - Recomendación: Cambiar el nombre de la cookie de sesión por uno personalizado.
+
+Conclusiones del análisis con Semgrep:
+------------------------------------------------------------
+El análisis con Semgrep OWASP Top 10 detectó múltiples configuraciones inseguras relacionadas con el manejo de sesiones en el archivo server.js.
+Las vulnerabilidades encontradas están directamente relacionadas con los riesgos OWASP A02 (Cryptographic Failures) y A05 (Security Misconfiguration).
+
+Recomendaciones generales:
+    • Reemplazar secretos fijos por variables de entorno seguras.
+    • Asegurar cookies con los parámetros 'secure', 'httpOnly', 'expires', 'domain' y 'path'.
+    • Personalizar los nombres de las cookies de sesión para evitar fingerprinting.
+
+Generación de reporte JSON:
+    semgrep --config=p/owasp-top-ten . --json > semgrep-report.json
+
+Además, se probó el uso de Semgrep desde la extensión de Visual Studio Code, lo cual permitió generar automáticamente la configuración local del análisis en la carpeta .vscode del proyecto.
+
+
+3. LINTING (ESLINT)
+------------------------------------------------------------
+Para finalizar el proceso de auditoría y análisis estático, se implementó la herramienta Linting (ESLint), enfocada en revisar errores de estilo, convenciones y sintaxis del código.
+
+ESLint permite detectar:
+    • Errores de sintaxis.
+    • Variables declaradas pero no utilizadas.
+    • Funciones mal definidas.
+    • Problemas de estilo (uso de comillas, llaves, espacios, etc.).
+
+Configuración y ejecución:
+    npx eslint .
+
+Resultados obtenidos:
+    • 31 problemas detectados en total.
+    • 27 errores (que deben corregirse para cumplir las reglas).
+    • 4 advertencias (no críticas, pero recomendadas).
+
+Ejemplos de errores detectados:
+    - Strings must use doublequote → cambiar comillas simples por dobles.
+    - Unexpected var, use let or const instead → evitar el uso de var.
+    - Missing semicolon → agregar punto y coma al final de cada línea.
+    - Unexpected console statement → evitar console.log en producción.
+    - Expected indentation of 2 spaces → mantener la sangría de 2 espacios.
+
+Corrección automática:
+    npx eslint . --fix
+
+Generación de reporte JSON:
+    npx eslint . -f json -o eslint-report.json
+
+Conclusión del análisis de Linting:
+------------------------------------------------------------
+El uso de Linting garantiza la homogeneidad y limpieza del código, reduciendo errores comunes y mejorando la legibilidad del proyecto.
+Además, complementa las herramientas Snyk y Semgrep al enfocarse en la calidad y estilo del código, no solo en la seguridad.
+
+
+CONCLUSIÓN GENERAL DEL DOCUMENTO DE EVIDENCIAS
+------------------------------------------------------------
+A través del proceso completo se logró implementar con éxito las tres herramientas clave de análisis estático y seguridad dentro del proyecto UNA CHAT:
+
+    ✅ Snyk → permitió analizar vulnerabilidades en dependencias del proyecto y generar un reporte de riesgos detallado.
+    ✅ Semgrep → identificó vulnerabilidades de configuración y malas prácticas de seguridad en el código fuente (basadas en OWASP Top 10).
+    ✅ ESLint → garantizó el cumplimiento de estándares de calidad y estilo, detectando errores de sintaxis y posibles malas prácticas de programación.
+
+El resultado final demuestra un entorno de desarrollo más seguro y estructurado, con análisis automatizados y reportes exportados en formato JSON, que pueden integrarse posteriormente dentro de un pipeline de integración continua (CI/CD) para monitorear la calidad y seguridad del código de forma constante.
