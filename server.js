@@ -6,7 +6,6 @@ require('dotenv').config();
 // Imports
 const express = require("express");
 const { auth, requiresAuth } = require('express-openid-connect');
-var cons = require('consolidate');
 var path = require('path');
 let app = express();
 
@@ -40,9 +39,8 @@ const config = {
 app.use(auth(config));
 
 // MVC View Setup
-app.engine('html', cons.swig)
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'html');
+app.set('view engine', 'ejs');
 
 // App middleware
 app.use("/static", express.static("static"));
