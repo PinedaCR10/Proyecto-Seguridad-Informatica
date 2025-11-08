@@ -1,0 +1,29 @@
+name: Security Scan
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    - cron: '0 0 * * *'  # Ejecutar diariamente a medianoche
+
+jobs:
+  nuclei-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Nuclei - Vulnerability Scan
+        uses: projectdiscovery/nuclei-action@main
+        with:
+          target: "https://proyecto-seguridad-informatica.onrender.com"  # Reemplazar con tu URL de Render
+          flags: "-severity critical,high,medium -stats"
+          github-report: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: GitHub Workflow artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: nuclei-output
+          path: nuclei-output
