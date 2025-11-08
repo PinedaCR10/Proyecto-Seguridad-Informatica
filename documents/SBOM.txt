@@ -1,0 +1,76 @@
+SOFTWARE BILL OF MATERIALS (SBOM) – PROYECTO SEGURIDAD INFORMÁTICA
+
+Proyecto: Escaneo Estático Local – UNA Chat
+Fecha: Octubre 2025
+Responsable: Equipo de Desarrollo UNA
+
+------------------------------------------------------------
+1. DESCRIPCIÓN GENERAL
+El SBOM (Software Bill of Materials) detalla los componentes, librerías, frameworks y dependencias utilizadas en el proyecto,
+incluyendo sus versiones, licencias y vulnerabilidades conocidas. Su propósito es identificar riesgos potenciales, garantizar
+la trazabilidad de los componentes y facilitar la gestión de vulnerabilidades.
+
+El análisis fue realizado con la herramienta Snyk, complementado con ESLint y Semgrep, generando los reportes:
+    - snyk-report.json
+    - eslint.config.mjs
+    - semgrep-report.json
+
+------------------------------------------------------------
+2. HERRAMIENTAS UTILIZADAS
+
+Herramienta | Función principal | Resultado
+------------------------------------------------------------
+Snyk    | Escaneo de dependencias y vulnerabilidades (CVE) | snyk-report.json
+ESLint  | Revisión de estilo y buenas prácticas | eslint.config.mjs
+Semgrep | Escaneo estático OWASP Top 10 | semgrep-report.json
+
+------------------------------------------------------------
+3. COMPONENTES DETECTADOS Y VULNERABILIDADES
+
+Componente / Librería | Versión | Vulnerabilidad | Severidad | Riesgo | Recomendación
+------------------------------------------------------------
+@okta/oidc-middleware | 0.0.6 | Open Redirect, XSS, Code Injection | Alta | 20 | Actualizar a 5.4.0
+express-session | 1.15.6 | XSS, Improper Data Handling | Media | 12 | Actualizar a 1.18.2
+express | 4.18.2 | Open Redirect, ReDoS | Media | 10 | Actualizar a 4.21.2
+socket.io | 1.7.4 | DoS, Code Injection | Alta | 16 | Actualizar a 4.8.0
+swig | 1.4.2 | ReDoS, Prototype Pollution | Alta | 20 | Sustituir por Handlebars
+lodash | 4.17.4 | Prototype Pollution | Alta | 15 | Aplicar parches de seguridad
+node-forge | 0.7.1 | Cryptographic Signature Flaw | Alta | 16 | Actualizar a 1.x o superior
+express-openid-connect | 2.16.0 | XSS, Cookie Misconfiguration | Media | 10 | Actualizar a 2.18.0
+body-parser | 1.20.1 | Resource Amplification | Alta | 18 | Actualizar a versión superior
+xmlhttprequest-ssl | 1.5.3 | Arbitrary Code Injection | Alta | 20 | Actualizar a 1.6.2
+uglify-js | 2.4.24 | ReDoS | Media | 12 | Sustituir por Terser o actualizar
+minimist | 0.0.10 | Prototype Pollution | Media | 10 | Actualizar a 1.2.8
+jose | 2.0.6 | Resource Exhaustion | Media | 8 | Actualizar a 2.0.7 o 4.15.5
+cookie | 0.3.1 | Cross-site Scripting (XSS) | Media | 10 | Actualizar a 0.6.x
+path-to-regexp | 0.1.7 | ReDoS | Alta | 16 | Actualizar a 6.x
+
+------------------------------------------------------------
+4. MATRIZ DE RIESGO INHERENTE
+
+Probabilidad | Impacto | Descripción | Ejemplos
+------------------------------------------------------------
+5 - Muy alta | 5 - Crítico | Vulnerabilidad activa sin parche disponible | socket.io, node-forge
+4 - Alta | 4 - Alta | Versiones obsoletas o sin mantenimiento | swig, lodash, okta-middleware
+3 - Media | 3 - Media | Mitigaciones parciales o incompletas | express, body-parser
+2 - Baja | 2 - Baja | Bajo impacto, pero requiere actualización | minimist, cookie
+1 - Muy baja | 1 - Nulo | Sin vulnerabilidades conocidas | Dependencias propias
+
+------------------------------------------------------------
+5. CONCLUSIÓN DEL SBOM
+
+El análisis permitió identificar múltiples dependencias críticas y obsoletas, destacando vulnerabilidades graves en:
+    - @okta/oidc-middleware
+    - socket.io
+    - swig
+
+Conclusiones clave:
+    • Más del 60% de las dependencias están desactualizadas con vulnerabilidades conocidas.
+    • Varias librerías presentan riesgos de severidad Alta o Crítica (según CVSS).
+    • Las principales amenazas detectadas son inyección de código, XSS y ReDoS.
+    • Se recomienda aplicar actualizaciones periódicas, sustituir librerías sin mantenimiento y actualizar el SBOM en cada sprint.
+
+Conclusión final:
+El SBOM se consolida como una herramienta esencial para la gestión de seguridad del proyecto, permitiendo identificar y
+mitigar vulnerabilidades antes del despliegue, y mantener un control continuo sobre las dependencias en cada fase del
+desarrollo de UNA Chat.
